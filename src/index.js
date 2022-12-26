@@ -14,29 +14,29 @@ function searchCountry(e) {
   if (name === '') {
     clearContent();
   } else {
-    fetchHendler(name);
+    makeContent(name);
   }
 }
 
-function fetchHendler(name) {
+function makeContent(name) {
   fetchCountries(name)
-    .then(data => {
-      if (data.length > 10) {
+    .then(country => {
+      if (country.length > 10) {
         clearContent();
         Notiflix.Notify.info(
           'Too many matches found. Please enter a more specific name.'
         );
         return;
       }
-      if (data.length >= 2 && data.length <= 10) {
+      if (country.length >= 2 && country.length <= 10) {
         clearContent();
-        countryListMarkUp(data);
+        countryList(country);
         return;
       }
-      if ((data.length = 1)) {
+      if ((country.length = 1)) {
         clearContent();
-        countryListMarkUp(data);
-        countryInfoMarkUp(data);
+        countryList(country);
+        countryInfo(country);
         return;
       }
     })
@@ -46,19 +46,19 @@ function fetchHendler(name) {
     });
 }
 
-function countryInfoMarkUp(data) {
-  const markUp = data.map(({ capital, population, languages }) => {
-    return `<p>Capital: ${capital}</p><p>Population: ${population}</p><p>Languages: ${Object.values(
-      languages
-    )}</p>`;
+function countryInfo(country) {
+  const markUp = country.map(({ capital, population, languages }) => {
+    return `<b>Capital: ${capital}</b>
+    <p>Population: ${population}</p>
+    <p>Languages: ${Object.values(languages)}</p>`;
   });
   countryInfoEll.innerHTML = markUp.join('');
 }
 
-function countryListMarkUp(data) {
-  const markUp = data.map(({ name: { common }, flags: { svg } }) => {
+function countryList(country) {
+  const markUp = country.map(({ name: { common }, flags: { svg } }) => {
       return `<li>
-    <img src=${svg} width='50'></img>
+    <img src=${svg} width='80'></img>
     <h1>${common}</h1></li>`;
   });
   countryListEll.innerHTML = markUp.join('');
